@@ -1,0 +1,106 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
+:root {
+    --ea-cubic: cubic-bezier(0.21, 0.61, 0.35, 1);
+}
+
+html,
+body {
+    background-color: #121212;
+    font-family: "Inter", Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #f2f2f2;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span {
+    color: #f2f2f2;
+    padding: 0;
+    margin: 0;
+}
+
+a {
+    color: #657dff;
+    text-decoration: underline;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    padding: 0;
+    position: relative;
+    color: #f2f2f2;
+    font-family: "Inter", Arial, sans-serif;
+}
+
+button > .background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    background-color: #242424;
+    border: solid 1px #353535;
+    border-radius: 8px;
+    transition: filter 0.2s var(--ea-cubic);
+}
+
+button > .text {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    padding: 8px 16px;
+}
+
+button:hover:not(:disabled) > .background {
+    filter: brightness(115%);
+}
+
+button.primary > .text {
+    color: #121212;
+}
+
+button.primary > .background {
+    background-color: #f2f2f2;
+    border: solid 1px #e4e4e4;
+}
+
+button.primary:hover:not(:disabled) > .background {
+    filter: brightness(85%);
+}
+
+button:disabled {
+    filter: brightness(60%);
+    cursor: not-allowed;
+}
+
+label {
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 12px;
+    font-weight: 600;
+}
+
+input {
+    border: solid 1px #353535;
+    border-radius: 8px;
+    background-color: #242424;
+    color: #f2f2f2;
+    padding: 8px 16px;
+    font-family: "Inter", Arial, sans-serif;
+    transition: border 0.2s var(--ea-cubic);
+}
+
+input:focus {
+    outline: none;
+    border: solid 1px #646464;
+}

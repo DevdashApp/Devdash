@@ -17,5 +17,8 @@
     "test": "",
     "start": "node ."
   },
-  "devDependencies": {}
+  "dependencies": {
+    "express": "^5.2.1"
+  },
+  "type": "module"
 }
