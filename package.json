@@ -1,0 +1,21 @@
+{
+  "name": "devdash",
+  "version": "1.0.0",
+  "description": "A simple developer dashboard for linking different apps to each other.",
+  "homepage": "https://github.com/DevdashApp/Devdash#readme",
+  "bugs": {
+    "url": "https://github.com/DevdashApp/Devdash/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DevdashApp/Devdash.git"
+  },
+  "license": "AGPL-3.0-or-later",
+  "author": "TotoCodeFR",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "",
+    "start": "node ."
+  },
+  "devDependencies": {}
+}
