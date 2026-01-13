@@ -4,8 +4,6 @@ import { Router } from "express";
 import { getDopplerClient } from "../../utility/doppler.js";
 await getDopplerClient();
 
-console.log(process.env.GITHUB_CLIENT_ID, process.env.GITHUB_CLIENT_SECRET);
-
 const githubApp = new App({
     appId: process.env.GITHUB_APP_ID,
     privateKey: await fs.readFile("devdash-handler.pem", "utf-8"),
@@ -48,4 +46,7 @@ router.get('/api/github/oauth/callback', async (req, res) => {
     res.redirect("/app/");
 });
 
-export default { router, middleware: createNodeMiddleware(githubApp.webhooks) };
+export default {
+    routers: [router],
+    middlewares: [createNodeMiddleware(githubApp.webhooks)]
+};
