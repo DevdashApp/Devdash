@@ -2,14 +2,13 @@ import express from 'express';
 import { config } from 'dotenv';
 config({ quiet: true });
 import { getDopplerClient } from './utility/doppler.js';
+import { load } from './utility/loadservices.js';
 
 await getDopplerClient();
-const { default: { middleware: githubMiddleware, router: githubRouter } } = await import('./services/github/main.js');
 
 const app = express();
 
-app.use('/api/webhooks', githubMiddleware);
-app.use(githubRouter);
+load(app);
 
 app.use(express.json());
 
