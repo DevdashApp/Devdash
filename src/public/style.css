@@ -90,7 +90,8 @@ label {
     font-weight: 600;
 }
 
-input[type="text"] input[type="password"] {
+input[type="text"],
+input[type="password"] {
     border: solid 1px #353535;
     border-radius: 8px;
     background-color: #242424;
@@ -100,7 +101,8 @@ input[type="text"] input[type="password"] {
     transition: border 0.2s var(--ea-cubic);
 }
 
-input[type="text"]:focus input[type="password"]:focus {
+input[type="text"]:focus,
+input[type="password"]:focus {
     outline: none;
     border: solid 1px #646464;
 }
