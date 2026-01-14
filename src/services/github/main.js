@@ -1,8 +1,6 @@
 import { App, createNodeMiddleware } from "octokit";
 import fs from "node:fs/promises";
 import { Router } from "express";
-import { getDopplerClient } from "../../utility/doppler.js";
-await getDopplerClient();
 
 const githubApp = new App({
     appId: process.env.GITHUB_APP_ID,
@@ -14,7 +12,7 @@ const githubApp = new App({
     },
     webhooks: {
         secret: process.env.GITHUB_WEBHOOK_SECRET,
-        path: "/api/webhooks",
+        path: "/webhooks",
     }
 });
 
@@ -31,13 +29,13 @@ console.log("Install URL:", await githubApp.getInstallationUrl({
     state: "random_csrf_token",
 }));
 
-router.get('/api/github/oauth/login', async (req, res) => {
+router.get('/oauth/login', async (req, res) => {
     res.redirect(await githubApp.getInstallationUrl({
         state: 'random_csrf_token'
     }));
 });
 
-router.get('/api/github/oauth/callback', async (req, res) => {
+router.get('/oauth/callback', async (req, res) => {
     const code = req.query.code;
     if (!code) return res.status(400).send("Missing code");
 
