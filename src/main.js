@@ -8,7 +8,7 @@ await getDopplerClient();
 
 const app = express();
 
-load(app);
+await load(app);
 
 app.use(express.json());
 
