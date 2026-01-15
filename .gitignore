@@ -143,3 +143,5 @@ vite.config.ts.timestamp-*
 # Custom
 package-lock.json
 *.pem
+
+GEMINI.md
