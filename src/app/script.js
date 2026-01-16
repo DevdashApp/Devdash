@@ -39,7 +39,7 @@ function loadContent() {
                 });
             })
             .catch(error => {
-                console.error('Erreur lors du chargement du contenu :', error);
+                console.error('Error when loading content:', error);
             });
 
     }
