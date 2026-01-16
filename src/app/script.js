@@ -23,7 +23,7 @@ function loadContent() {
                     }
                     contentDiv.appendChild(newScript);
                     script.classList.add('service-specific');
-                    script.remove(); // nettoyer le script inactif
+                    script.remove();
                 });
 
                 const linkElements = contentDiv.querySelectorAll('link[rel="stylesheet"]');
