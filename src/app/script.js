@@ -6,7 +6,6 @@ function flushJSandCSS() {
 
 function loadContent() {
     const service = window.location.href.split('/')[4];
-    console.log(service);
     if (service) {
         flushJSandCSS();
         fetch("/services/content/" + service + "/index.html")
