@@ -1,6 +1,6 @@
 import { App, createNodeMiddleware } from "octokit";
 import fs from "node:fs/promises";
-import { Router } from "express";
+import { Router, static as static_ } from "express";
 
 const githubApp = new App({
     appId: process.env.GITHUB_APP_ID,
@@ -17,6 +17,7 @@ const githubApp = new App({
 });
 
 const router = new Router();
+const frontendRouter = new Router();
 
 githubApp.oauth.on("token.created", async ({ token, octokit }) => {
     console.log("New user token created!");
@@ -44,7 +45,10 @@ router.get('/oauth/callback', async (req, res) => {
     res.redirect("/app/");
 });
 
+frontendRouter.use(static_('src/services/github/frontend'));
+
 export default {
     routers: [router],
-    middlewares: [createNodeMiddleware(githubApp.webhooks)]
+    middlewares: [createNodeMiddleware(githubApp.webhooks)],
+    frontendRouters: [frontendRouter]
 };

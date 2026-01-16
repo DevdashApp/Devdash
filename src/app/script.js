@@ -8,7 +8,7 @@ function loadContent() {
     const service = window.location.href.split('/')[4];
     if (service) {
         flushJSandCSS();
-        fetch("/services/content/" + service + "/index.html")
+        fetch("/services/" + service + "/index.html")
             .then(response => response.text())
             .then(html => {
                 const contentDiv = document.getElementById('content');
@@ -18,7 +18,7 @@ function loadContent() {
                 scriptElements.forEach(script => {
                     const newScript = document.createElement('script');
                     if (script.src) {
-                        newScript.src = '/services/content/' + script.src.split('/').pop();
+                        newScript.src = '/services/' + script.src.split('/').pop();
                     } else {
                         newScript.textContent = script.textContent;
                     }
@@ -31,7 +31,7 @@ function loadContent() {
                 linkElements.forEach(link => {
                     const newLink = document.createElement('link');
                     newLink.rel = 'stylesheet';
-                    newLink.href = '/services/content/' + service + link.href.split('/').pop();
+                    newLink.href = '/services/' + service + link.href.split('/').pop();
                     newLink.crossOrigin = 'anonymous';
                     newLink.type = 'text/css';
                     newLink.classList.add('service-specific');
