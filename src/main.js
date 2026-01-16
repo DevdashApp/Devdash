@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import fs from 'fs';
 import { config } from 'dotenv';
 config({ quiet: true });
 import { getDopplerClient } from './utility/doppler.js';
@@ -18,6 +19,14 @@ app.use(express.static('src/public'));
 app.use('/app', express.static('src/app'));
 
 app.get('/app*splat', (req, res) => {
+    const filePath = path.resolve('src/app', `.${req.path.replace('/app', '')}`);
+
+    // If this looks like a file AND it exists, serve it
+    if (path.extname(req.path) && fs.existsSync(filePath)) {
+        return res.sendFile(filePath);
+    }
+
+    // Otherwise SPA fallback
     res.sendFile(path.resolve('src/app/index.html'));
 });
 
