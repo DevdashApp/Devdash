@@ -12,6 +12,7 @@ function loadContent() {
             .then(response => response.text())
             .then(html => {
                 const contentDiv = document.getElementById('content');
+                contentDiv.innerHTML = html;
 
                 const scriptElements = contentDiv.querySelectorAll('script');
                 scriptElements.forEach(script => {
