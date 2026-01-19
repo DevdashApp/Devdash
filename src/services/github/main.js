@@ -45,7 +45,7 @@ router.get('/oauth/callback', async (req, res) => {
     res.redirect("/app/");
 });
 
-frontendRouter.use(static_('src/services/github/frontend'));
+frontendRouter.get('/', static_('src/services/github/frontend/index.html'));
 
 export default {
     routers: [router],

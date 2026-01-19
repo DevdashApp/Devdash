@@ -8,7 +8,7 @@ function loadContent() {
     const service = window.location.href.split('/')[4];
     if (service) {
         flushJSandCSS();
-        fetch("/services/" + service + "/index.html")
+        fetch("/services/" + service + "/")
             .then(response => response.text())
             .then(html => {
                 const contentDiv = document.getElementById('content');
