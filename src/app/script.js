@@ -38,6 +38,11 @@ function loadContent() {
                     document.head.appendChild(newLink);
                     link.remove();
                 });
+
+                const title = contentDiv.querySelector('title');
+                if (title) {
+                    document.title = title.textContent + ' - Devdash';
+                }
             })
             .catch(error => {
                 console.error('Error when loading content:', error);
