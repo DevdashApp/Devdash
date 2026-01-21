@@ -6,5 +6,6 @@ export async function load(expressApp) {
         routers.forEach(router => expressApp.use(`/api/${file}`, router));
         middlewares.forEach(middleware => expressApp.use(`/api/${file}`, middleware));
         frontendRouters.forEach(router => expressApp.use(`/services/${file}/`, router));
+        console.log(`/services/${file}`);
     });
 }
