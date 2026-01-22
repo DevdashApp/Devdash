@@ -8,7 +8,7 @@ function loadContent() {
     const service = window.location.href.split('/')[4];
     if (service) {
         flushJSandCSS();
-        fetch("/services/" + service + "/")
+        fetch("/services/" + window.location.pathname.replace("/app/", ""))
             .then(response => response.text())
             .then(html => {
                 const contentDiv = document.getElementById('content');
@@ -18,7 +18,7 @@ function loadContent() {
                 scriptElements.forEach(script => {
                     const newScript = document.createElement('script');
                     if (script.src) {
-                        newScript.src = '/services/' + script.src.split('/').pop();
+                        newScript.src = '/services/' + service + '/' + new RegExp('(?<=(?<!/)/)(?!/)[^?]+').exec(script.src);
                     } else {
                         newScript.textContent = script.textContent;
                     }
@@ -31,7 +31,12 @@ function loadContent() {
                 linkElements.forEach(link => {
                     const newLink = document.createElement('link');
                     newLink.rel = 'stylesheet';
-                    newLink.href = '/services/' + service + link.href.split('/').pop();
+                    const match = new RegExp('(?<=(?<!/)/)(?!/)[^?]+').exec(link.href);
+                    if (match) {
+                        const result = match[0].split('/');
+                        result.shift();
+                        newLink.href = '/services/' + result.join('/');
+                    }
                     newLink.crossOrigin = 'anonymous';
                     newLink.type = 'text/css';
                     newLink.classList.add('service-specific');
