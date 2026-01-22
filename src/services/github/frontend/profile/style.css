@@ -1,0 +1,34 @@
+:root {
+    --brm: 1;
+}
+
+@supports (corner-shape: squircle) {
+    :root {
+        --brm: 2;
+    }
+}
+
+#profilePicture {
+    border-radius: 100%;
+    width: 128px;
+    aspect-ratio: 1;
+}
+
+.profileCard {
+    border-radius: calc(var(--radius-md) * var(--brm));
+    corner-shape: squircle;
+    border: 1px solid var(--border-main);
+    background-color: var(--bg-secondary);
+    width: 300px;
+    padding: var(--padding-md);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 8px;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 16px;
+    transform: translateY(-50%);
+}
