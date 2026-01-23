@@ -1,7 +1,10 @@
 import { App, createNodeMiddleware, Octokit } from "octokit";
 import fs from "node:fs/promises";
 import { Router } from "express";
+import NodeCache from "node-cache";
 import path from "node:path";
+
+const cache = new NodeCache();
 
 const app = new App({
     appId: process.env.GITHUB_APP_ID,
@@ -46,13 +49,22 @@ app.oauth.on("token.created", async ({ token, app }) => {
 
 router.get("/profile/get", async (req, res) => {
     try {
+        const cachedData = cache.get(`github-profile-${req.query.username}`);
+        if (cachedData) return res.json(cachedData);
+        if (cachedData == {}) return res.status(404).json({ error: "User not found" });
+
         const { data } = await octokit.request(
             `GET /users/${req.query.username}`
         );
+
+        cache.set(`github-profile-${req.query.username}`, data, 60 * 15);
+
         res.json(data);
     } catch (err) {
         if (err.status == 404) {
             res.status(404).json({ error: "User not found" });
+
+            cache.set(`github-profile-${req.query.username}`, {}, 60 * 15);
         } else {
             res.status(500).json({ error: "Internal Server Error" });
         }
