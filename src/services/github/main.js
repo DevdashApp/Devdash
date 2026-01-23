@@ -1,6 +1,6 @@
 import { App, createNodeMiddleware, Octokit } from "octokit";
 import fs from "node:fs/promises";
-import { Router, static as static_ } from "express";
+import { Router } from "express";
 import path from "node:path";
 
 const app = new App({
