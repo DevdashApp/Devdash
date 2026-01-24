@@ -13,6 +13,8 @@ async function loadProfile(username) {
     document.getElementById('username').textContent = profileData.login;
     document.getElementById('displayName').textContent = displayName;
     document.getElementById('profilePicture').setAttribute('src', profilePicture);
+    document.getElementById('followers').textContent = profileData.followers
+    document.getElementById('following').textContent = profileData.following
 }
 
 loadProfile(window.location.pathname.split('/')[3]);
