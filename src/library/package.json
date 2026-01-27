@@ -1,0 +1,5 @@
+{
+    "name": "@devdash/library",
+    "type": "module",
+    "main": "main.js"
+}
