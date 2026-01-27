@@ -15,7 +15,9 @@
     "main": "src/main.js",
     "scripts": {
         "test": "",
-        "start": "node ."
+        "start": "node .",
+        "lib-link": "node scripts/lib-link.js",
+        "lib-unlink": "node scripts/lib-unlink.js"
     },
     "dependencies": {
         "@dopplerhq/node-sdk": "^1.3.0",
@@ -25,5 +27,8 @@
         "node-cache": "^5.1.2",
         "octokit": "^5.0.5"
     },
-    "type": "module"
+    "type": "module",
+    "devDependencies": {
+        "cross-env": "^10.1.0"
+    }
 }
