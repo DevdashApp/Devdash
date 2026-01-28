@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import { Router } from "express";
 import { cache } from '@devdash/library';
 import path from "node:path";
-import moment from "moment-timezone";
+// import moment from "moment-timezone"; TODO: add this for location
 
 const app = new App({
     appId: process.env.GITHUB_APP_ID,
@@ -19,7 +19,9 @@ const app = new App({
     },
 });
 
-const octokit = new Octokit();
+const octokit = new Octokit({
+    auth: process.env.GITHUB_TOKEN,
+});
 
 const router = new Router();
 
@@ -55,8 +57,27 @@ router.get("/profile/get", async (req, res) => {
         const { data } = await octokit.request(
             `GET /users/${req.query.username}`
         );
+        try {
+            // 1. Added 'await' so the catch block actually works
+            // 2. Passed the query string directly as the first argument
+            const response = await octokit.graphql(
+                `query ($username: String!) {
+            user(login: $username) {
+                pronouns
+            }
+        }`,
+                {
+                    username: req.query.username
+                }
+            );
 
-        data.timezone = moment.tz.zonesForCountry(data.location)[0];
+            // 3. Extract the specific field from the response
+            data.pronouns = response.user.pronouns || "not set";
+
+        } catch (e) {
+            data.pronouns = "unknown";
+            console.error("GraphQL Error:", e.message);
+        }
 
         cache.set(`github/profile/${req.query.username}`, data, 60 * 15);
 

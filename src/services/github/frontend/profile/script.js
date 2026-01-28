@@ -10,7 +10,7 @@ async function loadProfile(username) {
     console.log(profileData);
 
     document.getElementById('bio').textContent = bio;
-    document.getElementById('username').textContent = profileData.login;
+    document.getElementById('username').textContent = `${profileData.login} · ${profileData.pronouns}`;
     document.getElementById('displayName').textContent = displayName;
     document.getElementById('profilePicture').setAttribute('src', profilePicture);
     document.getElementById('followers').textContent = profileData.followers;
