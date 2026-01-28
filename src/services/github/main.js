@@ -3,6 +3,7 @@ import fs from "node:fs/promises";
 import { Router } from "express";
 import { cache } from '@devdash/library';
 import path from "node:path";
+import moment from "moment-timezone";
 
 const app = new App({
     appId: process.env.GITHUB_APP_ID,
@@ -54,6 +55,8 @@ router.get("/profile/get", async (req, res) => {
         const { data } = await octokit.request(
             `GET /users/${req.query.username}`
         );
+
+        data.timezone = moment.tz.zonesForCountry(data.location)[0];
 
         cache.set(`github/profile/${req.query.username}`, data, 60 * 15);
 
