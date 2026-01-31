@@ -6,6 +6,8 @@ import path from "node:path";
 import moment from "moment-timezone";
 import countries from "i18n-iso-countries";
 
+// what a shitty system to get timezones
+// when will github add some graphql request to get it...
 countries.registerLocale((await import("i18n-iso-countries/langs/en.json", { with: { type: "json" } })).default);
 
 const app = new App({

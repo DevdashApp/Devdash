@@ -22,6 +22,8 @@ async function loadProfile(username) {
         const offset = new Intl.DateTimeFormat('en-US', { timeZone: profileData.timezone, timeZoneName: 'shortOffset' }).formatToParts(date).find(p => p.type === 'timeZoneName').value.replace('GMT', 'UTC');
         document.getElementById('timezone').textContent = `${time} (${offset})`;
     }
+
+    document.getElementById('cd__username').textContent = profileData.login;
 }
 
 loadProfile(window.location.pathname.split('/')[3]);
