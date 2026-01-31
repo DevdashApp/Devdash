@@ -1,7 +1,7 @@
 import { App, createNodeMiddleware, Octokit } from "octokit";
 import fs from "node:fs/promises";
 import { Router } from "express";
-import { cache } from '@devdash/library';
+import { cache, logger as Logger } from '@devdash/library';
 import path from "node:path";
 import moment from "moment-timezone";
 import countries from "i18n-iso-countries";
@@ -9,6 +9,8 @@ import countries from "i18n-iso-countries";
 // what a shitty system to get timezones
 // when will github add some graphql request to get it...
 countries.registerLocale((await import("i18n-iso-countries/langs/en.json", { with: { type: "json" } })).default);
+
+const logger = Logger('github');
 
 const app = new App({
     appId: process.env.GITHUB_APP_ID,
@@ -105,6 +107,11 @@ frontendRouter.get("/:username", (req, res) => {
 
 frontendRouter.get('/:username/script.js', (req, res) => res.sendFile(path.resolve('src/services/github/frontend/profile/script.js')));
 frontendRouter.get('/:username/style.css', (req, res) => res.sendFile(path.resolve('src/services/github/frontend/profile/style.css')));
+
+logger.info("Github installation URL: ", await app.getInstallationUrl({
+    state: "random_csrf_token",
+}));
+logger.info("Service is now ready.");
 
 export default {
     routers: [router],

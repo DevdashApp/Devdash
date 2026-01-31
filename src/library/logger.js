@@ -1,19 +1,18 @@
 import chalk from 'chalk';
 
-const moduleName = import.meta.url.split('/').pop().split('.')[0];
-
 const logger = {
+    moduleName: 'module',
     log(...text) {
-        console.log(chalk.white(`[${moduleName}]: `, ...text));
+        console.log(chalk.white(`[${this.moduleName}]: `, ...text));
     },
     error(...text) {
-        console.error(chalk.red(`[${moduleName}]: `, ...text));
+        console.error(chalk.red(`[${this.moduleName}]: `, ...text));
     },
     warn(...text) {
-        console.warn(chalk.yellow(`[${moduleName}]: `, ...text));
+        console.warn(chalk.yellow(`[${this.moduleName}]: `, ...text));
     },
     info(...text) {
-        console.info(chalk.blue(`[${moduleName}]: `, ...text));
+        console.info(chalk.blue(`[${this.moduleName}]: `, ...text));
     }
 };
 
