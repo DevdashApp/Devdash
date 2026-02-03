@@ -24,6 +24,7 @@ async function loadProfile(username) {
     }
 
     document.getElementById('readme__username').textContent = profileData.login;
+    document.getElementById('readmeContent').innerHTML = await (await fetch('/api/github/profile/readme?owner=' + username)).json();
 }
 
 loadProfile(window.location.pathname.split('/')[3]);

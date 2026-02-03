@@ -5,9 +5,41 @@ import { cache, logger as Logger } from '@devdash/library';
 import path from "node:path";
 import moment from "moment-timezone";
 import countries from "i18n-iso-countries";
+import jwt from "jsonwebtoken";
 
-// what a shitty system to get timezones
-// when will github add some graphql request to get it...
+async function generateJwt() {
+    const payload = {
+        iat: Math.floor(Date.now() / 1000),
+        exp: Math.floor(Date.now() / 1000) + 60, // expires in 60 seconds
+        iss: process.env.GITHUB_APP_ID,
+    };
+    return jwt.sign(payload, process.env.GITHUB_PRIVATE_KEY.replace(/\\n/g, '\n'), { algorithm: "RS256" });
+}
+
+async function getUserOctokit(installationId) {
+    // verify if a valid token already exists
+    const cachedToken = cache.get(`github/installations/${installationId}`);
+    if (cachedToken) {
+        return new Octokit({ auth: cachedToken });
+    }
+
+    // generate app's jwt
+    const jwtToken = await generateJwt();
+    const appOctokit = new Octokit({ auth: `Bearer ${jwtToken}` });
+
+    // get installation token
+    const { data: { token, expires_at } } = await appOctokit.apps.createInstallationAccessToken({
+        installation_id: installationId,
+    });
+
+    // cache token
+    const expiryDate = new Date(expires_at);
+    const ttl = Math.floor((expiryDate.getTime() - Date.now() - 300000) / 1000); // TTL en secondes
+    cache.set(`github/installations/${installationId}`, token, ttl);
+
+    return new Octokit({ auth: token });
+}
+
 countries.registerLocale((await import("i18n-iso-countries/langs/en.json", { with: { type: "json" } })).default);
 
 const logger = Logger('github');
@@ -48,54 +80,71 @@ router.get("/oauth/callback", async (req, res) => {
     res.redirect("/app/github");
 });
 
-app.oauth.on("token.created", async ({ token, app }) => {
+app.oauth.on("token.created", async ({ token, userOctokit }) => {
     console.log("New user token created!");
 
-    const { data: user } = await app.rest.users.getAuthenticated();
+    const { data: user } = await userOctokit.rest.users.getAuthenticated();
     console.log("User login:", user.login);
 });
 
 router.get("/profile/get", async (req, res) => {
     try {
         const cachedData = cache.get(`github/profile/${req.query.username}`);
-        if (cachedData) return res.json(cachedData);
-        if (cachedData == {}) return res.status(404).json({ error: "User not found" });
+        if (cachedData && Object.keys(cachedData).length > 0) return res.json(cachedData);
+        if (cachedData && Object.keys(cachedData).length === 0) return res.status(404).json({ error: "User not found" });
 
-        const { data } = await octokit.request(
-            `GET /users/${req.query.username}`
-        );
+        const { data } = await octokit.request(`GET /users/${req.query.username}`);
+
         try {
             const response = await octokit.graphql(
                 `query ($username: String!) {
                     user(login: $username) {
                         pronouns
+                        location
                     }
                 }`,
-                {
-                    username: req.query.username
-                }
+                { username: req.query.username }
             );
 
             data.pronouns = response.user.pronouns || "not set";
-
+            if (response.user.location) {
+                const countryCode = countries.getAlpha2Code(response.user.location, 'en');
+                if (countryCode) {
+                    const timezones = moment.tz.zonesForCountry(countryCode);
+                    data.timezone = timezones.length > 0 ? timezones[0] : "unknown";
+                }
+            }
         } catch (e) {
             data.pronouns = "unknown";
+            data.timezone = "unknown";
             console.error("GraphQL Error:", e.message);
         }
-
-        data.timezone = moment.tz.zonesForCountry(countries.getAlpha2Code(data.location, 'en'));
 
         cache.set(`github/profile/${req.query.username}`, data, 60 * 15);
 
         res.json(data);
     } catch (err) {
-        if (err.status == 404) {
+        if (err.status === 404) {
             res.status(404).json({ error: "User not found" });
-
             cache.set(`github/profile/${req.query.username}`, {}, 60 * 15);
         } else {
             res.status(500).json({ error: "Internal Server Error" });
         }
+    }
+});
+
+router.get('/profile/readme', async (req, res) => {
+    try {
+        const { data: readmeData } = await octokit.request(`GET /repos/${req.query.owner}/${req.query.owner}/readme`);
+
+        const { data: markdown } = await octokit.request("POST /markdown", {
+            text: Buffer.from(readmeData.content, 'base64').toString('utf-8'),
+        });
+
+        res.json(markdown);
+    } catch (e) {
+        res.status(500).json({ error: "Internal Server Error" });
+        console.error(e);
     }
 });
 
@@ -107,6 +156,7 @@ frontendRouter.get("/:username", (req, res) => {
 
 frontendRouter.get('/:username/script.js', (req, res) => res.sendFile(path.resolve('src/services/github/frontend/profile/script.js')));
 frontendRouter.get('/:username/style.css', (req, res) => res.sendFile(path.resolve('src/services/github/frontend/profile/style.css')));
+frontendRouter.get('/github-md.css', (req, res) => res.sendFile(path.resolve('src/services/github/frontend/github-md.css')));
 
 logger.info("Github installation URL: ", await app.getInstallationUrl({
     state: "random_csrf_token",
