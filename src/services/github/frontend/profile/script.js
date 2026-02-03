@@ -23,7 +23,7 @@ async function loadProfile(username) {
         document.getElementById('timezone').textContent = `${time} (${offset})`;
     }
 
-    document.getElementById('cd__username').textContent = profileData.login;
+    document.getElementById('readme__username').textContent = profileData.login;
 }
 
 loadProfile(window.location.pathname.split('/')[3]);
