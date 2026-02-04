@@ -36,3 +36,14 @@ main {
     align-items: center;
     flex-direction: column;
 }
+
+.readme {
+    background-color: var(--bg-secondary);
+    padding: 8px;
+    border: 1px solid var(--border-main);
+    border-radius: var(--radius-md);
+    width: 1fr;
+    height: auto;
+    overflow: auto;
+    line-height: 2.25em;
+}
