@@ -12,7 +12,7 @@ const logger = {
         console.warn(chalk.yellow(`[${this.moduleName}]: `, ...text));
     },
     info(...text) {
-        console.info(chalk.blue(`[${this.moduleName}]: `, ...text));
+        console.info(chalk.blueBright(`[${this.moduleName}]: `, ...text));
     }
 };
 
