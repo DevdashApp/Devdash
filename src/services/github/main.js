@@ -34,7 +34,7 @@ async function getUserOctokit(installationId) {
 
     // cache token
     const expiryDate = new Date(expires_at);
-    const ttl = Math.floor((expiryDate.getTime() - Date.now() - 300000) / 1000); // TTL en secondes
+    const ttl = Math.floor((expiryDate.getTime() - Date.now() - 300000) / 1000); // TTL in seconds
     cache.set(`github/installations/${installationId}`, token, ttl);
 
     return new Octokit({ auth: token });
