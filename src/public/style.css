@@ -3,7 +3,8 @@
 :root {
     /* Colors */
     --bg-main: #121212;
-    --bg-secondary: #242424;
+    /* --bg-secondary: #242424; */
+    --bg-secondary: #181818;
 
     --text-main: #f2f2f2;
     --text-muted: rgba(255, 255, 255, 0.85);
